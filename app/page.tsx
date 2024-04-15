@@ -9,11 +9,15 @@ import {
   NodeSpecification,
   useDecisionGraphActions
 } from '@gorules/jdm-editor';
-import { defaultGraph } from './defaultGraph';
 import { Button, Input, Modal, Space } from 'antd';
 import { ApartmentOutlined, EditOutlined } from '@ant-design/icons';
 
-export default function Home() {
+const defaultGraph = {
+  nodes: [],
+  edges: [],
+};
+
+export default function Page() {
   const nameRef = useRef('');
   const ref = useRef<DecisionGraphRef>(null);
   const [value, setValue] = useState<any>(defaultGraph);
@@ -35,7 +39,7 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const DecisionNode = ({ specification, id, selected, data }) => {
+  const DecisionNode = ({ specification, id, selected, data }: any) => {
     const { updateNode } = useDecisionGraphActions()
 
     const handleFileSelect = (event: any) => {
@@ -105,7 +109,7 @@ export default function Home() {
   ];
 
   return (
-    <JdmConfigProvider>
+    <JdmConfigProvider theme={{ mode: 'dark' }}>
       <div style={{ width: '100vw', height: '100vh' }}>
         <DecisionGraph
           ref={ref}
