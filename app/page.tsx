@@ -35,6 +35,55 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
+  const DecisionNode = ({ specification, id, selected, data }) => {
+    const { updateNode } = useDecisionGraphActions()
+
+    const handleFileSelect = (event: any) => {
+      const selectedFile = event.target.files[0];
+      nameRef.current = selectedFile.name
+
+      updateNode(id, (draft) => {
+        draft.name = selectedFile.name
+        draft.content.key = selectedFile.name;
+        return draft;
+      });
+
+      setIsModalOpen(false);
+    };
+
+    return (
+      <GraphNode
+        id={id}
+        name={data.name}
+        isSelected={selected}
+        specification={specification}
+      >
+        <Space.Compact>
+          <Input value={nameRef.current} style={{ pointerEvents: 'none' }} />
+          <Button
+            type="primary"
+            onClick={showModal}
+            icon={<EditOutlined />}
+          />
+        </Space.Compact>
+
+        <Modal
+          title="Selecciona un archivo .JSON"
+          centered
+          width={400}
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <input
+            type="file"
+            onChange={handleFileSelect}
+          />
+        </Modal>
+      </GraphNode>
+    )
+  }
+
   const components: NodeSpecification[] = [
     {
       type: 'decisionNode',
@@ -51,54 +100,7 @@ export default function Home() {
         showModal()
         return node
       },
-      renderNode: ({ specification, id, selected, data }) => {
-        const { updateNode } = useDecisionGraphActions()
-
-        const handleFileSelect = (event: any) => {
-          const selectedFile = event.target.files[0];
-          nameRef.current = selectedFile.name
-
-          updateNode(id, (draft) => {
-            draft.name = selectedFile.name
-            draft.content.key = selectedFile.name;
-            return draft;
-          });
-
-          setIsModalOpen(false);
-        };
-
-        return (
-          <GraphNode
-            id={id}
-            name={data.name}
-            isSelected={selected}
-            specification={specification}
-          >
-            <Space.Compact>
-              <Input value={nameRef.current} style={{ pointerEvents: 'none' }} />
-              <Button
-                type="primary"
-                onClick={showModal}
-                icon={<EditOutlined />}
-              />
-            </Space.Compact>
-
-            <Modal
-              title="Selecciona un archivo .JSON"
-              centered
-              width={400}
-              open={isModalOpen}
-              onOk={handleOk}
-              onCancel={handleCancel}
-            >
-              <input
-                type="file"
-                onChange={handleFileSelect}
-              />
-            </Modal>
-          </GraphNode>
-        )
-      }
+      renderNode: DecisionNode
     },
   ];
 
